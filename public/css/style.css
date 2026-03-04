@@ -11,6 +11,8 @@
   --cinza-medio: #6c757d;
   --fundo-claro: #f8f9fa;
   --branco: #ffffff;
+  /* Altura reservada para a navbar fixa (web e mobile) */
+  --navbar-height: 72px;
 }
 
 body {
@@ -47,18 +49,44 @@ body {
   min-width: 44px;
 }
 
-/* Navbar fixa: garantir que fica por cima e com altura definida */
+/* Navbar fixa: altura fixa para o conteúdo poder começar sempre por baixo */
 .navbar {
   background-color: var(--verde-escuro) !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: 0.5rem;
   z-index: 1030;
-  min-height: 56px;
+  min-height: var(--navbar-height);
+  height: auto;
 }
 
-/* Conteúdo começa sempre abaixo da navbar (evita select/header sobrepostos) */
+.navbar .container {
+  min-height: var(--navbar-height);
+}
+
+/* Conteúdo começa abaixo da navbar */
 main {
-  padding-top: calc(80px + env(safe-area-inset-top, 0) + 1rem);
+  padding-top: calc(var(--navbar-height) + 1rem + env(safe-area-inset-top, 0)) !important;
+  position: relative;
+}
+
+/* Selector de torneio e botões: sempre visíveis */
+.selector-torneio {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  min-height: 44px;
+}
+
+.selector-torneio .form-select,
+.selector-torneio select#selectTorneio {
+  background-color: var(--branco);
+  color: var(--cinza-escuro);
+}
+
+.selector-torneio label.form-label {
+  color: var(--cinza-escuro);
 }
 
 .navbar-brand {
@@ -301,17 +329,45 @@ section {
   }
 }
 
-/* Mobile: manter espaço abaixo da navbar, mais padding lateral e safe-area */
+/* Mobile: padding lateral e safe-area; barra do torneio já está no fluxo */
 @media (max-width: 576px) {
   main.container {
-    padding-top: calc(80px + env(safe-area-inset-top, 0) + 1.25rem) !important;
+    padding-top: 1rem !important;
     padding-bottom: 2rem !important;
     padding-left: 1rem;
     padding-right: 1rem;
   }
 
   .selector-torneio {
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
+    padding: 0.75rem 0;
+    background: var(--branco);
+    border-radius: 8px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .selector-torneio .form-select,
+  .selector-torneio select#selectTorneio {
+    background-color: var(--branco) !important;
+    color: var(--cinza-escuro) !important;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    max-width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .selector-torneio .form-select option,
+  .selector-torneio select#selectTorneio option {
+    background: var(--branco);
+    color: var(--cinza-escuro);
+  }
+
+  .selector-torneio label.form-label {
+    color: var(--cinza-escuro);
+    width: 100%;
+    margin-bottom: 0.35rem;
   }
 
   section {

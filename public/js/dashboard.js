@@ -111,7 +111,7 @@
     const btn = el('btnRegistarProximo');
     if (!card || !texto) return;
     const tid = window.torneioAtualId;
-    if (tid == null) {
+    if (tid == null || window.torneioFinalizado) {
       card.style.display = 'none';
       return;
     }
@@ -154,8 +154,27 @@
     var podioData = el('podioDataFinalizado');
 
     var finalizado = torneio && (torneio.finalizado === 1 || torneio.finalizado === true);
-    if (btnFinalizar) btnFinalizar.style.display = finalizado ? 'none' : 'inline-block';
+    window.torneioFinalizado = !!finalizado;
+
+    if (btnFinalizar) {
+      btnFinalizar.style.display = finalizado ? 'none' : 'inline-block';
+      btnFinalizar.disabled = finalizado;
+    }
     if (labelFinalizado) labelFinalizado.style.display = finalizado ? 'inline' : 'none';
+
+    var btnNovo = el('btnNovoTorneio');
+    var btnApagar = el('btnApagarTorneio');
+    var btnRegistarProximo = el('btnRegistarProximo');
+    var btnAdicionarDupla = el('btnAdicionarDupla');
+    var btnGerarJogos = el('btnGerarJogos');
+    var btnAdicionarRodadas = el('btnAdicionarRodadas');
+    /* Novo torneio: sempre permitido. Apagar: bloqueado se finalizado */
+    if (btnNovo) btnNovo.disabled = false;
+    if (btnApagar) btnApagar.disabled = false;
+    if (btnRegistarProximo) btnRegistarProximo.disabled = finalizado;
+    if (btnAdicionarDupla) btnAdicionarDupla.disabled = finalizado;
+    if (btnGerarJogos) btnGerarJogos.disabled = finalizado;
+    if (btnAdicionarRodadas) btnAdicionarRodadas.disabled = finalizado;
 
     if (secaoPodio) {
       if (finalizado && classificacao && classificacao.length > 0) {
@@ -190,9 +209,22 @@
       var secaoPodio = el('podioCampeoes');
       if (secaoPodio) secaoPodio.style.display = 'none';
       var btnFinalizar = el('btnFinalizarTorneio');
-      if (btnFinalizar) btnFinalizar.style.display = 'none';
+      if (btnFinalizar) { btnFinalizar.style.display = 'none'; btnFinalizar.disabled = false; }
       var labelFinalizado = el('torneioFinalizadoLabel');
       if (labelFinalizado) labelFinalizado.style.display = 'none';
+      window.torneioFinalizado = false;
+      var btnNovo = el('btnNovoTorneio');
+      var btnApagar = el('btnApagarTorneio');
+      var btnRegistarProximo = el('btnRegistarProximo');
+      var btnAdicionarDupla = el('btnAdicionarDupla');
+      var btnGerarJogos = el('btnGerarJogos');
+      var btnAdicionarRodadas = el('btnAdicionarRodadas');
+      if (btnNovo) btnNovo.disabled = false;
+      if (btnApagar) btnApagar.disabled = false;
+      if (btnRegistarProximo) btnRegistarProximo.disabled = false;
+      if (btnAdicionarDupla) btnAdicionarDupla.disabled = false;
+      if (btnGerarJogos) btnGerarJogos.disabled = false;
+      if (btnAdicionarRodadas) btnAdicionarRodadas.disabled = false;
       if (typeof partidasAtualizarLista === 'function') partidasAtualizarLista([]);
       if (typeof partidasAtualizarSelect === 'function') partidasAtualizarSelect([]);
       return;

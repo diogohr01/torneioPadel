@@ -38,9 +38,9 @@
         : 'Pendente';
       const extraClass = temResultado ? ' resultado-ok' : '';
       const ordemLabel = (p.ordem != null) ? 'Jogo ' + p.ordem + ': ' : '';
-      const mostrarRegistar = !temResultado && p.id === idProximoJogo;
+      const mostrarRegistar = !temResultado && p.id === idProximoJogo && !window.torneioFinalizado;
       const btnRegistar = mostrarRegistar
-        ? `<button type="button" class="btn btn-sm btn-primary btn-action ms-2" data-partida-id="${p.id}" data-dupla1="${escapeHtml(p.dupla1_nome)}" data-dupla2="${escapeHtml(p.dupla2_nome)}">Registar</button>`
+        ? `<button type="button" class="btn btn-sm btn-primary btn-action ms-2" data-partida-id="${p.id}" data-dupla1="${escapeHtml(p.dupla1_nome)}" data-dupla2="${escapeHtml(p.dupla2_nome)}">Registrar</button>`
         : '';
       const nComentarios = comentariosCountByPartida[p.id] != null ? comentariosCountByPartida[p.id] : 0;
       const btnComentarios = `<button type="button" class="btn btn-sm btn-outline-secondary btn-comentarios ms-1" data-partida-id="${p.id}" data-dupla1="${escapeHtml(p.dupla1_nome)}" data-dupla2="${escapeHtml(p.dupla2_nome)}" data-ordem="${p.ordem != null ? p.ordem : ''}">💬 Comentários (${nComentarios})</button>`;
@@ -105,6 +105,11 @@
         if (el('labelDupla2')) el('labelDupla2').textContent = 'Games: ' + (opt.dataset.dupla2 || 'Dupla 2');
       }
     }
+
+    var finalizado = !!window.torneioFinalizado;
+    select.disabled = finalizado;
+    var btnSubmit = document.getElementById('formResultado') && document.getElementById('formResultado').querySelector('button[type="submit"]');
+    if (btnSubmit) btnSubmit.disabled = finalizado;
   };
 
   (function () {
@@ -218,11 +223,17 @@
 
   el('formResultado').addEventListener('submit', async function (e) {
     e.preventDefault();
+    const errEl = el('erroResultado');
+    errEl.textContent = '';
+
+    if (window.torneioFinalizado) {
+      errEl.textContent = 'Torneio já finalizado. Não é possível registar mais resultados.';
+      return;
+    }
+
     const partidaId = el('selectPartida').value;
     const g1 = parseInt(el('gamesDupla1').value, 10);
     const g2 = parseInt(el('gamesDupla2').value, 10);
-    const errEl = el('erroResultado');
-    errEl.textContent = '';
 
     if (!partidaId) {
       errEl.textContent = 'Selecione uma partida.';
@@ -255,7 +266,7 @@
         }, 3500);
       }
     } catch (err) {
-      errEl.textContent = err.message || 'Erro ao registar resultado.';
+      errEl.textContent = err.message || 'Erro ao registrar resultado.';
     }
   });
 

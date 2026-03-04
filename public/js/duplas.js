@@ -28,12 +28,13 @@
       if (!duplas.length) {
         container.innerHTML = '<div class="list-group-item text-muted">Nenhuma dupla. Use "Adicionar dupla" para criar.</div>';
       } else {
+        const desabilitado = window.torneioFinalizado ? ' disabled' : '';
         container.innerHTML = duplas.map(d => `
           <div class="list-group-item d-flex justify-content-between align-items-center">
             <span>${escapeHtml(d.nome)}</span>
             <span>
-              <button type="button" class="btn btn-sm btn-outline-primary me-1" data-dupla-id="${d.id}" data-dupla-nome="${escapeHtml(d.nome)}">Editar</button>
-              <button type="button" class="btn btn-sm btn-outline-danger" data-dupla-id="${d.id}">Apagar</button>
+              <button type="button" class="btn btn-sm btn-outline-primary me-1" data-dupla-id="${d.id}" data-dupla-nome="${escapeHtml(d.nome)}"${desabilitado}>Editar</button>
+              <button type="button" class="btn btn-sm btn-outline-danger" data-dupla-id="${d.id}"${desabilitado}>Apagar</button>
             </span>
           </div>
         `).join('');
@@ -44,7 +45,10 @@
           btn.addEventListener('click', function () { apagarDupla(id); });
         } else {
           const nome = btn.getAttribute('data-dupla-nome') || '';
-          btn.addEventListener('click', function () { mostrarFormEdit(id, nome); });
+          btn.addEventListener('click', function () {
+            if (window.torneioFinalizado) return;
+            mostrarFormEdit(id, nome);
+          });
         }
       });
     } catch (err) {
@@ -74,6 +78,7 @@
       alert('Selecione um torneio primeiro.');
       return;
     }
+    if (window.torneioFinalizado) return;
     mostrarFormNova();
   });
 
@@ -81,6 +86,7 @@
 
   el('formDupla').addEventListener('submit', async function (e) {
     e.preventDefault();
+    if (window.torneioFinalizado) return;
     const idEdit = el('duplaIdEdit').value;
     const nome = el('duplaNome').value.trim();
     if (!nome) return;
@@ -99,6 +105,7 @@
   });
 
   async function apagarDupla(id) {
+    if (window.torneioFinalizado) return;
     if (!window.confirm('Apagar esta dupla? (Partidas onde participa podem ficar inválidas.)')) return;
     try {
       await api.duplas.apagar(id);
@@ -120,6 +127,7 @@
       alert('Selecione um torneio.');
       return;
     }
+    if (window.torneioFinalizado) return;
     try {
       await api.torneios.gerarPartidas(tid, getRodadas());
       if (window.dashboardRefresh) window.dashboardRefresh();
@@ -135,6 +143,7 @@
       alert('Selecione um torneio.');
       return;
     }
+    if (window.torneioFinalizado) return;
     try {
       await api.torneios.adicionarRodadas(tid, getRodadas());
       if (window.dashboardRefresh) window.dashboardRefresh();

@@ -121,18 +121,10 @@
   </div>
 
   <main class="container py-4">
-    <!-- Selector de torneio -->
-    <div class="selector-torneio mb-4 d-flex flex-wrap align-items-center gap-2">
-      <label class="form-label mb-0 fw-bold">Torneio:</label>
-      <select class="form-select form-select-sm" id="selectTorneio" style="max-width: 280px;"></select>
-      <button type="button" class="btn btn-outline-primary btn-sm" id="btnNovoTorneio">Novo torneio</button>
-      <button type="button" class="btn btn-outline-success btn-sm" id="btnFinalizarTorneio" title="Finalizar torneio e mostrar pódio">Finalizar torneio</button>
-      <button type="button" class="btn btn-outline-danger btn-sm" id="btnApagarTorneio" title="Apagar torneio selecionado">Apagar torneio</button>
-      <span id="torneioFinalizadoLabel" class="text-success small fw-bold ms-1" style="display: none;">Torneio finalizado</span>
-    </div>
+   
 
     <!-- Pódio dos campeões (visível quando torneio finalizado) -->
-    <section id="podioCampeoes" class="podio-section mb-5" style="display: none;">
+    <section id="podioCampeoes" class="podio-section mb-5" style="display: none;margin-top: 5rem;">
       <h2 class="h4 mb-3">Pódio dos campeões</h2>
       <p id="podioDataFinalizado" class="text-muted small mb-3"></p>
       <div class="podio" id="podioContainer">
@@ -152,13 +144,13 @@
     </section>
 
     <!-- Dashboard -->
-    <section id="dashboard" class="mb-5">
+    <section id="dashboard" class="mb-5" style="margin-top: 5rem;">
       <h1 class="h2 mb-4">Dashboard</h1>
       <div id="cardProximoJogo" class="card card-dashboard mb-4" style="display: none;">
         <div class="card-body">
           <h5 class="card-title text-muted">Próximo jogo</h5>
           <p class="card-value mb-2" id="proximoJogoTexto">-</p>
-          <button type="button" class="btn btn-sm btn-primary btn-action" id="btnRegistarProximo">Registar resultado</button>
+          <button type="button" class="btn btn-sm btn-primary btn-action" id="btnRegistarProximo">Registrar resultado</button>
         </div>
       </div>
       <div class="row g-4">
@@ -189,7 +181,15 @@
         </div>
       </div>
     </section>
-
+ <!-- Selector de torneio e botões -->
+ <div class="selector-torneio mb-4 d-flex flex-wrap align-items-center gap-2">
+  <label class="form-label mb-0 fw-bold">Torneio:</label>
+  <select class="form-select form-select-sm" id="selectTorneio" style="max-width: 280px;"></select>
+  <button type="button" class="btn btn-outline-primary btn-sm" id="btnNovoTorneio">Novo torneio</button>
+  <button type="button" class="btn btn-outline-success btn-sm" id="btnFinalizarTorneio" title="Finalizar torneio e mostrar pódio">Finalizar torneio</button>
+  <button type="button" class="btn btn-outline-danger btn-sm" id="btnApagarTorneio" title="Apagar torneio selecionado">Apagar torneio</button>
+  <span id="torneioFinalizadoLabel" class="text-success small fw-bold ms-1" style="display: none;">Torneio finalizado</span>
+</div>
     <!-- Classificação -->
     <section id="classificacao" class="mb-5">
       <h1 class="h2 mb-4">Classificação</h1>
@@ -259,9 +259,9 @@
       </div>
     </section>
 
-    <!-- Registar Resultado -->
+    <!-- Registrar Resultado -->
     <section id="registar" class="mb-5">
-      <h1 class="h2 mb-4">Registar Resultado</h1>
+      <h1 class="h2 mb-4">Registrar Resultado</h1>
       <div class="card card-form">
         <div class="card-body">
           <form id="formResultado">
@@ -285,7 +285,7 @@
               </div>
             </div>
             <div class="mb-3 text-danger small" id="erroResultado"></div>
-            <button type="submit" class="btn btn-primary btn-action" aria-label="Registar resultado da partida">Registar Resultado</button>
+            <button type="submit" class="btn btn-primary btn-action" aria-label="Registar resultado da partida">Registrar Resultado</button>
           </form>
         </div>
       </div>
