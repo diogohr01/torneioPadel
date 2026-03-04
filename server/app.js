@@ -21,6 +21,9 @@ app.use(express.json());
 // Frontend estático (public)
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+// Health check (para Render e outros hosts)
+app.get('/api/health', (req, res) => res.json({ ok: true }));
+
 // API
 app.use('/api/torneios', require('./routes/torneios'));
 app.use('/api/duplas', require('./routes/duplas'));

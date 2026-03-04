@@ -1,0 +1,11 @@
+# Render Blueprint: deploy do backend (Node.js + Express + SQLite)
+# Em https://dashboard.render.com: New → Blueprint → conectar o repo e selecionar este ficheiro.
+# better-sqlite3 tem código nativo: compilar no servidor (Linux) evita "invalid ELF header".
+
+services:
+  - type: web
+    name: torneio-padel-api
+    runtime: node
+    buildCommand: npm install && npm rebuild better-sqlite3
+    startCommand: npm start
+    plan: free

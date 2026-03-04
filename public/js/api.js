@@ -1,8 +1,8 @@
 /**
- * Chamadas à API do backend (base URL relativa /api).
- * Todas as listagens usam torneio_id do torneio atual (window.torneioAtualId).
+ * Chamadas à API do backend.
+ * API_BASE: em localhost fica '/api'; em produção (ex. GitHub Pages) usa window.API_BASE_URL (URL do Render + /api).
  */
-const API_BASE = '/api';
+const API_BASE = (typeof window !== 'undefined' && window.API_BASE_URL) ? window.API_BASE_URL : '/api';
 
 async function request(path, options = {}) {
   const url = path.startsWith('http') ? path : API_BASE + path;
