@@ -39,6 +39,35 @@ function criar(req, res) {
   }
 }
 
+/** DELETE /api/torneios/:id - apaga torneio e dados associados (duplas, partidas). */
+function apagar(req, res) {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (!id) return res.status(400).json({ erro: 'ID inválido' });
+    const torneio = torneioModel.obterPorId(id);
+    if (!torneio) return res.status(404).json({ erro: 'Torneio não encontrado' });
+    torneioModel.apagar(id);
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+}
+
+/** POST /api/torneios/:id/finalizar - marca torneio como finalizado */
+function finalizar(req, res) {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (!id) return res.status(400).json({ erro: 'ID inválido' });
+    const torneio = torneioModel.obterPorId(id);
+    if (!torneio) return res.status(404).json({ erro: 'Torneio não encontrado' });
+    torneioModel.finalizar(id);
+    const atualizado = torneioModel.obterPorId(id);
+    res.status(200).json({ finalizado: true, finalizado_at: atualizado.finalizado_at, torneio: atualizado });
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+}
+
 /** GET /api/torneios/:id/proximo-jogo */
 function proximoJogo(req, res) {
   try {
@@ -124,7 +153,9 @@ module.exports = {
   listar,
   obterPorId,
   criar,
+  finalizar,
   proximoJogo,
   gerarPartidas,
-  adicionarRodadas
+  adicionarRodadas,
+  apagar
 };

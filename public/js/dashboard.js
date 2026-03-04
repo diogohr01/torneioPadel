@@ -137,6 +137,46 @@
     return div.innerHTML;
   }
 
+  function formatarDataFinalizado(createdAt) {
+    if (!createdAt) return '';
+    try {
+      var d = new Date(createdAt);
+      return isNaN(d.getTime()) ? '' : d.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function atualizarPodiumETorneioFinalizado(torneio, classificacao) {
+    var btnFinalizar = el('btnFinalizarTorneio');
+    var labelFinalizado = el('torneioFinalizadoLabel');
+    var secaoPodio = el('podioCampeoes');
+    var podioData = el('podioDataFinalizado');
+
+    var finalizado = torneio && (torneio.finalizado === 1 || torneio.finalizado === true);
+    if (btnFinalizar) btnFinalizar.style.display = finalizado ? 'none' : 'inline-block';
+    if (labelFinalizado) labelFinalizado.style.display = finalizado ? 'inline' : 'none';
+
+    if (secaoPodio) {
+      if (finalizado && classificacao && classificacao.length > 0) {
+        secaoPodio.style.display = 'block';
+        if (podioData && torneio.finalizado_at) {
+          podioData.textContent = 'Torneio finalizado a ' + formatarDataFinalizado(torneio.finalizado_at);
+          podioData.style.display = 'block';
+        } else if (podioData) {
+          podioData.style.display = 'none';
+        }
+        var top3 = classificacao.slice(0, 3);
+        if (el('podioNome1')) el('podioNome1').textContent = top3[0] ? escapeHtml(top3[0].nome) : '-';
+        if (el('podioNome2')) el('podioNome2').textContent = top3[1] ? escapeHtml(top3[1].nome) : '-';
+        if (el('podioNome3')) el('podioNome3').textContent = top3[2] ? escapeHtml(top3[2].nome) : '-';
+      } else {
+        secaoPodio.style.display = 'none';
+        if (podioData) podioData.style.display = 'none';
+      }
+    }
+  }
+
   async function carregar() {
     const tid = window.torneioAtualId;
     if (tid == null) {
@@ -147,18 +187,26 @@
       el('totalDuplas').textContent = '-';
       el('liderAtual').textContent = '-';
       el('cardProximoJogo').style.display = 'none';
+      var secaoPodio = el('podioCampeoes');
+      if (secaoPodio) secaoPodio.style.display = 'none';
+      var btnFinalizar = el('btnFinalizarTorneio');
+      if (btnFinalizar) btnFinalizar.style.display = 'none';
+      var labelFinalizado = el('torneioFinalizadoLabel');
+      if (labelFinalizado) labelFinalizado.style.display = 'none';
       if (typeof partidasAtualizarLista === 'function') partidasAtualizarLista([]);
       if (typeof partidasAtualizarSelect === 'function') partidasAtualizarSelect([]);
       return;
     }
     try {
-      const [classificacao, partidas] = await Promise.all([
+      const [classificacao, partidas, torneio] = await Promise.all([
         api.classificacao.listar(tid),
-        api.partidas.listar(tid)
+        api.partidas.listar(tid),
+        api.torneios.obter(tid)
       ]);
       atualizarCards(classificacao, partidas);
       renderizarClassificacao(classificacao);
       renderizarClassificacaoCards(classificacao);
+      atualizarPodiumETorneioFinalizado(torneio, classificacao);
       if (typeof partidasAtualizarLista === 'function') partidasAtualizarLista(partidas);
       if (typeof partidasAtualizarSelect === 'function') partidasAtualizarSelect(partidas);
       await atualizarProximoJogo();
@@ -171,7 +219,29 @@
       el('totalPartidas').textContent = '-';
       el('totalDuplas').textContent = '-';
       el('liderAtual').textContent = '-';
+      var secaoPodio = el('podioCampeoes');
+      if (secaoPodio) secaoPodio.style.display = 'none';
     }
+  }
+
+  if (el('btnFinalizarTorneio')) {
+    el('btnFinalizarTorneio').addEventListener('click', async function () {
+      var tid = window.torneioAtualId;
+      if (tid == null) return;
+      if (!window.confirm('Tens a certeza que queres finalizar este torneio? Os campeões serão definidos pela classificação atual.')) return;
+      try {
+        await api.torneios.finalizar(tid);
+        if (typeof window.dashboardRefresh === 'function') window.dashboardRefresh();
+        var toast = el('toastSucesso');
+        if (toast) {
+          toast.textContent = 'Torneio finalizado!';
+          toast.classList.add('show');
+          setTimeout(function () { toast.classList.remove('show'); toast.textContent = ''; }, 3500);
+        }
+      } catch (err) {
+        alert(err.message || 'Erro ao finalizar torneio.');
+      }
+    });
   }
 
   if (el('btnRegistarProximo')) {

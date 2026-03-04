@@ -24,12 +24,12 @@ npm start
 
 Abrir no browser: **http://localhost:3000**
 
-Ao iniciar, as duplas (Carlos e Nico, Diogo e Silveira, Avelar e Sant) e as partidas todos-contra-todos são criadas automaticamente. Basta registar os resultados das partidas.
+Ao iniciar, as duplas (Carlos e Nico, Diogo e Silveira, Avelar e Sant) e as partidas todos-contra-todos são criadas automaticamente. Basta registrar os resultados das partidas.
 
 ## Estrutura
 
 - `server/` – app.js, routes, controllers, models, database (schema + seed)
-- `public/` – index.html, css, js (dashboard, classificação, partidas, registar resultado)
+- `public/` – index.html, css, js (dashboard, classificação, partidas, registrar resultado)
 
 ## API
 

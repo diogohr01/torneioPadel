@@ -26,6 +26,7 @@ const api = {
     listar: () => request('/torneios'),
     obter: (id) => request('/torneios/' + id),
     criar: (body) => request('/torneios', { method: 'POST', body: JSON.stringify(body) }),
+    apagar: (id) => request('/torneios/' + id, { method: 'DELETE' }),
     proximoJogo: (id) => request('/torneios/' + id + '/proximo-jogo'),
     gerarPartidas: (id, rodadas) =>
       request('/torneios/' + id + '/gerar-partidas', {
@@ -36,7 +37,8 @@ const api = {
       request('/torneios/' + id + '/adicionar-rodadas', {
         method: 'POST',
         body: JSON.stringify({ rodadas: rodadas != null ? rodadas : 1 })
-      })
+      }),
+    finalizar: (id) => request('/torneios/' + id + '/finalizar', { method: 'POST' })
   },
   duplas: {
     listar: (torneioId) => request('/duplas' + (torneioId != null ? '?torneio_id=' + torneioId : '')),
@@ -55,6 +57,12 @@ const api = {
       request('/partidas/' + id + '/resultado', {
         method: 'POST',
         body: JSON.stringify({ games_dupla1, games_dupla2 })
+      }),
+    listarComentarios: (partidaId) => request('/partidas/' + partidaId + '/comentarios'),
+    adicionarComentario: (partidaId, body) =>
+      request('/partidas/' + partidaId + '/comentarios', {
+        method: 'POST',
+        body: JSON.stringify(body)
       })
   },
   classificacao: {

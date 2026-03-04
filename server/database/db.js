@@ -38,4 +38,30 @@ try {
   db.exec("CREATE INDEX IF NOT EXISTS idx_partidas_torneio_ordem ON partidas(torneio_id, ordem)");
 } catch (e) { /* já existem */ }
 
+// Migração: tabela comentarios (bases antigas)
+try {
+  const comentariosInfo = db.prepare("PRAGMA table_info(comentarios)").all();
+  if (!comentariosInfo || comentariosInfo.length === 0) {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS comentarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        partida_id INTEGER NOT NULL,
+        autor_nome TEXT,
+        texto TEXT NOT NULL,
+        created_at TEXT DEFAULT (datetime('now')),
+        FOREIGN KEY (partida_id) REFERENCES partidas(id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_comentarios_partida ON comentarios(partida_id);
+    `);
+  }
+} catch (e) { /* ignorar */ }
+
+// Migração: torneios finalizado / finalizado_at (bases antigas)
+const colsTorneios = db.prepare("PRAGMA table_info(torneios)").all();
+const hasFinalizado = colsTorneios.some(c => c.name === 'finalizado');
+if (!hasFinalizado) {
+  db.exec("ALTER TABLE torneios ADD COLUMN finalizado INTEGER DEFAULT 0");
+  db.exec("ALTER TABLE torneios ADD COLUMN finalizado_at TEXT");
+}
+
 module.exports = db;

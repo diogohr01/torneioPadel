@@ -103,6 +103,32 @@
     }
   });
 
+  el('btnApagarTorneio').addEventListener('click', async function () {
+    var tid = window.torneioAtualId;
+    if (tid == null) {
+      alert('Selecione um torneio para apagar.');
+      return;
+    }
+    var nomeAtual = el('selectTorneio').options[el('selectTorneio').selectedIndex];
+    var nome = nomeAtual ? nomeAtual.text : 'este torneio';
+    if (!window.confirm('Apagar o torneio "' + nome + '"? Todas as duplas e partidas associadas serão eliminadas. Esta ação não pode ser desfeita.')) {
+      return;
+    }
+    try {
+      await api.torneios.apagar(tid);
+      setTorneio(null);
+      await carregarTorneios();
+      var select = el('selectTorneio');
+      if (select.options.length > 1) {
+        select.value = select.options[1].value;
+        setTorneio(parseInt(select.value, 10));
+      }
+      refreshTudo();
+    } catch (err) {
+      alert(err.message || 'Erro ao apagar torneio.');
+    }
+  });
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', carregarTorneios);
   } else {

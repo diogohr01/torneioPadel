@@ -1,7 +1,9 @@
 -- Tabela de torneios (permite múltiplos torneios no futuro)
 CREATE TABLE IF NOT EXISTS torneios (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  nome TEXT NOT NULL
+  nome TEXT NOT NULL,
+  finalizado INTEGER DEFAULT 0,
+  finalizado_at TEXT
 );
 
 -- Tabela de duplas participantes (por torneio)
@@ -33,3 +35,14 @@ CREATE TABLE IF NOT EXISTS partidas (
 CREATE INDEX IF NOT EXISTS idx_partidas_dupla1 ON partidas(dupla1_id);
 CREATE INDEX IF NOT EXISTS idx_partidas_dupla2 ON partidas(dupla2_id);
 CREATE INDEX IF NOT EXISTS idx_partidas_vencedor ON partidas(vencedor_id);
+
+-- Comentários por partida (anonónimos ou com nome)
+CREATE TABLE IF NOT EXISTS comentarios (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  partida_id INTEGER NOT NULL,
+  autor_nome TEXT,
+  texto TEXT NOT NULL,
+  created_at TEXT DEFAULT (datetime('now')),
+  FOREIGN KEY (partida_id) REFERENCES partidas(id)
+);
+CREATE INDEX IF NOT EXISTS idx_comentarios_partida ON comentarios(partida_id);

@@ -21,7 +21,7 @@
           <li class="nav-item"><a class="nav-link" href="#duplas">Duplas</a></li>
           <li class="nav-item"><a class="nav-link" href="#classificacao">Classificação</a></li>
           <li class="nav-item"><a class="nav-link" href="#partidas">Partidas</a></li>
-          <li class="nav-item"><a class="nav-link" href="#registar">Registar Resultado</a></li>
+          <li class="nav-item"><a class="nav-link" href="#registar">Registrar Resultado</a></li>
         </ul>
       </div>
     </div>
@@ -49,6 +49,44 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
           <button type="button" class="btn btn-primary btn-action" id="btnCriarTorneio">Criar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Comentários da partida -->
+  <div class="modal fade" id="modalComentarios" tabindex="-1" aria-labelledby="modalComentariosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalComentariosLabel">Comentários</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="comentariosLista" class="comentarios-lista mb-3"></div>
+          <form id="formComentario" class="comentarios-form">
+            <div class="mb-2">
+              <label for="comentarioAutorNome" class="form-label small">O teu nome (opcional)</label>
+              <input type="text" class="form-control form-control-sm" id="comentarioAutorNome" placeholder="Anónimo" maxlength="100">
+            </div>
+            <div class="mb-2">
+              <label for="comentarioTexto" class="form-label small">Comentário</label>
+              <textarea class="form-control" id="comentarioTexto" rows="3" placeholder="Escreve um comentário..." maxlength="500"></textarea>
+              <div class="emoji-buttons mt-1" id="emojiButtons" aria-label="Inserir emoji">
+                <button type="button" class="btn-emoji" data-emoji="👍" title="👍">👍</button>
+                <button type="button" class="btn-emoji" data-emoji="👎" title="👎">👎</button>
+                <button type="button" class="btn-emoji" data-emoji="😂" title="😂">😂</button>
+                <button type="button" class="btn-emoji" data-emoji="🔥" title="🔥">🔥</button>
+                <button type="button" class="btn-emoji" data-emoji="⚽" title="⚽">⚽</button>
+                <button type="button" class="btn-emoji" data-emoji="🎾" title="🎾">🎾</button>
+                <button type="button" class="btn-emoji" data-emoji="💪" title="💪">💪</button>
+                <button type="button" class="btn-emoji" data-emoji="🏆" title="🏆">🏆</button>
+                <button type="button" class="btn-emoji" data-emoji="💩" title="💩">💩</button>
+                <button type="button" class="btn-emoji" data-emoji="🤮" title="🤮">🤮</button>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm btn-action">Publicar</button>
+          </form>
         </div>
       </div>
     </div>
@@ -88,7 +126,30 @@
       <label class="form-label mb-0 fw-bold">Torneio:</label>
       <select class="form-select form-select-sm" id="selectTorneio" style="max-width: 280px;"></select>
       <button type="button" class="btn btn-outline-primary btn-sm" id="btnNovoTorneio">Novo torneio</button>
+      <button type="button" class="btn btn-outline-success btn-sm" id="btnFinalizarTorneio" title="Finalizar torneio e mostrar pódio">Finalizar torneio</button>
+      <button type="button" class="btn btn-outline-danger btn-sm" id="btnApagarTorneio" title="Apagar torneio selecionado">Apagar torneio</button>
+      <span id="torneioFinalizadoLabel" class="text-success small fw-bold ms-1" style="display: none;">Torneio finalizado</span>
     </div>
+
+    <!-- Pódio dos campeões (visível quando torneio finalizado) -->
+    <section id="podioCampeoes" class="podio-section mb-5" style="display: none;">
+      <h2 class="h4 mb-3">Pódio dos campeões</h2>
+      <p id="podioDataFinalizado" class="text-muted small mb-3"></p>
+      <div class="podio" id="podioContainer">
+        <div class="podio-degrau podio-2" id="podioSegundo">
+          <span class="podio-pos">2º</span>
+          <span class="podio-nome" id="podioNome2">-</span>
+        </div>
+        <div class="podio-degrau podio-1" id="podioPrimeiro">
+          <span class="podio-pos">1º</span>
+          <span class="podio-nome" id="podioNome1">-</span>
+        </div>
+        <div class="podio-degrau podio-3" id="podioTerceiro">
+          <span class="podio-pos">3º</span>
+          <span class="podio-nome" id="podioNome3">-</span>
+        </div>
+      </div>
+    </section>
 
     <!-- Dashboard -->
     <section id="dashboard" class="mb-5">
