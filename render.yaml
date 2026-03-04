@@ -1,11 +1,9 @@
 # Render Blueprint: deploy do backend (Node.js + Express + SQLite)
-# better-sqlite3: instalação limpa no Linux evita "invalid ELF header" (não fazer commit de node_modules).
+# Usar Docker garante build em Linux e evita "invalid ELF header" com better-sqlite3.
 
 services:
   - type: web
     name: torneio-padel-api
-    runtime: node
-    # Instalação limpa para forçar compilação nativa no Linux (ignora cache/binários errados)
-    buildCommand: rm -rf node_modules && npm install
-    startCommand: npm start
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     plan: free

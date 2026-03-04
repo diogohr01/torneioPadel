@@ -46,8 +46,8 @@ O **GitHub Pages** só serve o frontend (HTML/CSS/JS). Para a app funcionar em p
 1. **Backend no Render** (gratuito)
    - Entra em [render.com](https://render.com) e faz login com o GitHub.
    - **New** → **Web Service**; liga o repositório do projeto.
-   - Render detecta Node: **Build Command** `npm install`, **Start Command** `npm start`.
-   - Clica **Create Web Service**. O Render atribui um URL (ex.: `https://torneio-padel-api.onrender.com`).
+   - **Recomendado (evitar erro "invalid ELF header"):** em **Environment** escolhe **Docker** e usa o `Dockerfile` na raiz do repo. O Render faz o build em Linux e o `better-sqlite3` compila corretamente.
+   - **Alternativa (Node nativo):** Build Command `rm -rf node_modules && npm install`, Start Command `npm start`. Em **Environment** adiciona a variável `npm_config_build_from_source` = `true`. Em **Settings** → **Build & Deploy** → **Clear build cache** antes do primeiro deploy. Não faças commit da pasta `node_modules` (está no `.gitignore`); se já a cometeste, remove com `git rm -r --cached node_modules` e faz push.
 
 2. **Frontend a apontar para a API**
    - No repositório, edita `public/js/config.js`.
