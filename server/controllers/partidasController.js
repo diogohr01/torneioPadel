@@ -5,7 +5,8 @@ const partidaModel = require('../models/Partida');
 
 function listar(req, res) {
   try {
-    const partidas = partidaModel.listar();
+    const torneioId = req.query.torneio_id != null ? parseInt(req.query.torneio_id, 10) : null;
+    const partidas = partidaModel.listar(torneioId);
     res.json(partidas);
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -24,14 +25,15 @@ function obterPorId(req, res) {
 
 function criar(req, res) {
   try {
-    const { dupla1_id, dupla2_id } = req.body;
-    if (!dupla1_id || !dupla2_id) {
-      return res.status(400).json({ erro: 'dupla1_id e dupla2_id são obrigatórios' });
+    const { torneio_id, ordem, dupla1_id, dupla2_id } = req.body;
+    if (!torneio_id || !dupla1_id || !dupla2_id) {
+      return res.status(400).json({ erro: 'torneio_id, dupla1_id e dupla2_id são obrigatórios' });
     }
     if (Number(dupla1_id) === Number(dupla2_id)) {
       return res.status(400).json({ erro: 'As duplas devem ser diferentes' });
     }
-    const id = partidaModel.criar(Number(dupla1_id), Number(dupla2_id));
+    const ord = ordem != null ? parseInt(ordem, 10) : 1;
+    const id = partidaModel.criar(Number(torneio_id), ord, Number(dupla1_id), Number(dupla2_id));
     const partida = partidaModel.obterPorId(id);
     res.status(201).json(partida);
   } catch (err) {
@@ -48,6 +50,8 @@ function atualizar(req, res) {
       ? (games_dupla1 > games_dupla2 ? partida.dupla1_id : partida.dupla2_id)
       : null;
     partidaModel.atualizar(req.params.id, {
+      torneio_id: partida.torneio_id,
+      ordem: partida.ordem,
       dupla1_id: dupla1_id ?? partida.dupla1_id,
       dupla2_id: dupla2_id ?? partida.dupla2_id,
       games_dupla1: games_dupla1 ?? partida.games_dupla1,

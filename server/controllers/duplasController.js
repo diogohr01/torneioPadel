@@ -5,7 +5,8 @@ const duplaModel = require('../models/Dupla');
 
 function listar(req, res) {
   try {
-    const duplas = duplaModel.listar();
+    const torneioId = req.query.torneio_id != null ? parseInt(req.query.torneio_id, 10) : null;
+    const duplas = duplaModel.listar(torneioId);
     res.json(duplas);
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -24,12 +25,17 @@ function obterPorId(req, res) {
 
 function criar(req, res) {
   try {
-    const { nome } = req.body;
+    const { nome, torneio_id } = req.body;
     if (!nome || !nome.trim()) {
       return res.status(400).json({ erro: 'Nome da dupla é obrigatório' });
     }
-    const id = duplaModel.criar(nome.trim());
-    res.status(201).json({ id, nome: nome.trim() });
+    const torneioId = torneio_id != null ? parseInt(torneio_id, 10) : null;
+    if (torneioId == null || isNaN(torneioId)) {
+      return res.status(400).json({ erro: 'torneio_id é obrigatório' });
+    }
+    const id = duplaModel.criar(nome.trim(), torneioId);
+    const dupla = duplaModel.obterPorId(id);
+    res.status(201).json(dupla);
   } catch (err) {
     res.status(500).json({ erro: err.message });
   }

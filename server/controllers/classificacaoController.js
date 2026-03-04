@@ -6,11 +6,11 @@ const duplaModel = require('../models/Dupla');
 const partidaModel = require('../models/Partida');
 
 /**
- * Calcula estatísticas por dupla a partir das partidas com resultado.
+ * Calcula estatísticas por dupla a partir das partidas com resultado (do torneio).
  */
-function calcularEstatisticas() {
-  const duplas = duplaModel.listar();
-  const partidas = partidaModel.listarComResultado();
+function calcularEstatisticas(torneioId) {
+  const duplas = duplaModel.listar(torneioId);
+  const partidas = partidaModel.listarComResultado(torneioId);
 
   const stats = {};
   duplas.forEach(d => {
@@ -89,8 +89,9 @@ function ordenarClassificacao(estatisticas, partidasComResultado) {
 
 function listar(req, res) {
   try {
-    const estatisticas = calcularEstatisticas();
-    const partidasComResultado = partidaModel.listarComResultado();
+    const torneioId = req.query.torneio_id != null ? parseInt(req.query.torneio_id, 10) : null;
+    const estatisticas = calcularEstatisticas(torneioId);
+    const partidasComResultado = partidaModel.listarComResultado(torneioId);
     const classificacao = ordenarClassificacao(estatisticas, partidasComResultado);
     // Adicionar posição
     classificacao.forEach((row, i) => {

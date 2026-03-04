@@ -1,18 +1,21 @@
 /**
- * Model: Duplas - CRUD de duplas participantes.
+ * Model: Duplas - CRUD por torneio.
  */
 const db = require('../database/db');
 
-function listar() {
-  return db.prepare('SELECT id, nome FROM duplas ORDER BY nome').all();
+function listar(torneioId) {
+  if (torneioId != null) {
+    return db.prepare('SELECT id, torneio_id, nome FROM duplas WHERE torneio_id = ? ORDER BY nome').all(torneioId);
+  }
+  return db.prepare('SELECT id, torneio_id, nome FROM duplas ORDER BY nome').all();
 }
 
 function obterPorId(id) {
-  return db.prepare('SELECT id, nome FROM duplas WHERE id = ?').get(id);
+  return db.prepare('SELECT id, torneio_id, nome FROM duplas WHERE id = ?').get(id);
 }
 
-function criar(nome) {
-  const result = db.prepare('INSERT INTO duplas (nome) VALUES (?)').run(nome);
+function criar(nome, torneioId) {
+  const result = db.prepare('INSERT INTO duplas (torneio_id, nome) VALUES (?, ?)').run(torneioId, nome);
   return result.lastInsertRowid;
 }
 

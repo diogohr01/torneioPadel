@@ -22,6 +22,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // API
+app.use('/api/torneios', require('./routes/torneios'));
 app.use('/api/duplas', require('./routes/duplas'));
 app.use('/api/partidas', require('./routes/partidas'));
 app.use('/api/classificacao', require('./routes/classificacao'));

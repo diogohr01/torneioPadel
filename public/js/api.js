@@ -1,5 +1,6 @@
 /**
  * Chamadas à API do backend (base URL relativa /api).
+ * Todas as listagens usam torneio_id do torneio atual (window.torneioAtualId).
  */
 const API_BASE = '/api';
 
@@ -15,16 +16,37 @@ async function request(path, options = {}) {
   return data;
 }
 
+function queryTorneio() {
+  const id = window.torneioAtualId;
+  return id != null ? '?torneio_id=' + id : '';
+}
+
 const api = {
+  torneios: {
+    listar: () => request('/torneios'),
+    obter: (id) => request('/torneios/' + id),
+    criar: (body) => request('/torneios', { method: 'POST', body: JSON.stringify(body) }),
+    proximoJogo: (id) => request('/torneios/' + id + '/proximo-jogo'),
+    gerarPartidas: (id, rodadas) =>
+      request('/torneios/' + id + '/gerar-partidas', {
+        method: 'POST',
+        body: JSON.stringify({ rodadas: rodadas != null ? rodadas : 1 })
+      }),
+    adicionarRodadas: (id, rodadas) =>
+      request('/torneios/' + id + '/adicionar-rodadas', {
+        method: 'POST',
+        body: JSON.stringify({ rodadas: rodadas != null ? rodadas : 1 })
+      })
+  },
   duplas: {
-    listar: () => request('/duplas'),
+    listar: (torneioId) => request('/duplas' + (torneioId != null ? '?torneio_id=' + torneioId : '')),
     obter: (id) => request('/duplas/' + id),
     criar: (body) => request('/duplas', { method: 'POST', body: JSON.stringify(body) }),
     atualizar: (id, body) => request('/duplas/' + id, { method: 'PUT', body: JSON.stringify(body) }),
     apagar: (id) => request('/duplas/' + id, { method: 'DELETE' })
   },
   partidas: {
-    listar: () => request('/partidas'),
+    listar: (torneioId) => request('/partidas' + (torneioId != null ? '?torneio_id=' + torneioId : '')),
     obter: (id) => request('/partidas/' + id),
     criar: (body) => request('/partidas', { method: 'POST', body: JSON.stringify(body) }),
     atualizar: (id, body) => request('/partidas/' + id, { method: 'PUT', body: JSON.stringify(body) }),
@@ -36,6 +58,6 @@ const api = {
       })
   },
   classificacao: {
-    listar: () => request('/classificacao')
+    listar: (torneioId) => request('/classificacao' + (torneioId != null ? '?torneio_id=' + torneioId : ''))
   }
 };
