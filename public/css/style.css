@@ -1,0 +1,148 @@
+/**
+ * Tema: verde escuro + cinza + branco.
+ * Torneio de Padel - estilos e overrides Bootstrap.
+ */
+
+:root {
+  --verde-escuro: #1b4332;
+  --verde-medio: #2d6a4f;
+  --verde-claro: #40916c;
+  --cinza-escuro: #343a40;
+  --cinza-medio: #6c757d;
+  --fundo-claro: #f8f9fa;
+  --branco: #ffffff;
+}
+
+body {
+  background-color: var(--fundo-claro);
+  color: var(--cinza-escuro);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--verde-escuro) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  font-size: 1.25rem;
+}
+
+.nav-link {
+  font-weight: 500;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--verde-claro) !important;
+}
+
+/* Cards dashboard */
+.card-dashboard {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-dashboard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.card-dashboard .card-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--verde-escuro);
+}
+
+.card-leader .card-value {
+  color: var(--verde-medio);
+}
+
+/* Tabela classificação */
+.table-classificacao {
+  background: var(--branco);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.table-classificacao thead {
+  background-color: var(--verde-escuro);
+  color: var(--branco);
+}
+
+.table-classificacao thead th {
+  border: none;
+  padding: 1rem 0.75rem;
+  font-weight: 600;
+}
+
+.table-classificacao tbody td {
+  padding: 0.85rem 0.75rem;
+}
+
+.table-classificacao tbody tr:hover {
+  background-color: rgba(27, 67, 50, 0.06);
+}
+
+/* Lista partidas */
+.list-group-item {
+  border-left: 4px solid transparent;
+}
+
+.list-group-item.resultado-ok {
+  border-left-color: var(--verde-claro);
+}
+
+/* Formulário e botões */
+.card-form {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btn-primary,
+.btn-action {
+  background-color: var(--verde-escuro);
+  border-color: var(--verde-escuro);
+  font-weight: 600;
+}
+
+.btn-primary:hover,
+.btn-action:hover {
+  background-color: var(--verde-medio);
+  border-color: var(--verde-medio);
+}
+
+.btn-outline-primary {
+  border-color: var(--verde-escuro);
+  color: var(--verde-escuro);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--verde-escuro);
+  color: var(--branco);
+}
+
+/* Scroll suave para âncoras */
+html {
+  scroll-padding-top: 70px;
+}
+
+section {
+  scroll-margin-top: 70px;
+}
+
+/* Responsivo: tabela em mobile */
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+
+  .card-dashboard .card-value {
+    font-size: 1.5rem;
+  }
+}
